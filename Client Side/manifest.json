@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
 
-  "name": "Data Scraping with PHP",
-  "description": "This extension demonstrates a browser action that showcases data scraping done with PHP.",
+  "name": "Google Vocab",
+  "description": "This will save the search result of vocabulary words with meaning.",
   "version": "1.0",
 
   "permissions": [
