@@ -58,7 +58,7 @@ window.addEventListener("load", function() {
             //Making post request to PHP file to reach the site http://yourdictionary.com
             $.ajax({
                     type: "POST",
-                    url: "http://sarcnitj.com/Server%20Side/index.php",
+                    url: "http://yourhost.com/Server%20Side/index.php",
                     data: {
                         link: str
                     }
