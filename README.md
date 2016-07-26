@@ -1,2 +1,2 @@
 # Google-Vocab
-A chrome extension to save all the vocab with meaning that we search on google.
+Google Vocab is a a chrome extension to save all the words that you search frequently on google while reading any article. It will help you to memorize the words for your further reference.   
