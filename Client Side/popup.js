@@ -58,7 +58,7 @@ window.addEventListener("load", function() {
             //Making post request to PHP file to reach the site http://yourdictionary.com
             $.ajax({
                     type: "POST",
-                    url: "http://yourhost.com/Server%20Side/index.php",
+                    url: "http://sarcnitj.com/Server%20Side/index.php",
                     data: {
                         link: str
                     }
@@ -75,34 +75,50 @@ window.addEventListener("load", function() {
                         }, function(result) {
                             // the input argument is ALWAYS an object containing the queried keys
                             // so we select the key we need
+
+                            if (!localStorage.getItem("count")) {
+                                localStorage.setItem("count", "0");
+                            }
+                            var i = localStorage.getItem("count");
+                            var ticker = parseInt(i);
+                            ticker++;
+
                             var userKeyIds = result.userKeyIds + "<br><br>";
                             var arr = $.makeArray(userKeyIds);
-                            arr.push(str, msg);
+                            arr.push(ticker, ".", " ", str, ":-", msg);
                             arr = arr.join(" ");
                             chrome.storage.sync.set({
                                 userKeyIds: arr
                             }, function() {
                                 // you can use strings instead of objects
                                 // if you don't  want to define default values
-                                chrome.storage.sync.get('userKeyIds', function() {
-                                    //document.getElementById('meaning').innerHTML =  result.userKeyIds;
-                                });
+                                // chrome.storage.sync.get('userKeyIds', function () {
+                                //document.getElementById('meaning').innerHTML =  result.userKeyIds;
+                                //	});
                             });
+                            localStorage.setItem("count", ticker.toString());
                         });
                     }); //add
 
                     $('#site').click(function() {
-                        window.location = "http://yourdictionary.com/" + str.toLowerCase();
+                        chrome.tabs.create({
+                            'url': "http://yourdictionary.com/" + str.toLowerCase()
+                        }, function(tab) {
+                            // Tab opened.
+                        });
                     });
 
                 });
         } else {
-            document.getElementById('revert').innerHTML = "It is not a Google Search Page";
+            document.getElementById('revert').innerHTML = "It is not a Google Search Page, Search will not work but you can see the list by clicking 'Show all' button";
         }
 
         $('#show').click(function() {
             chrome.storage.sync.get('userKeyIds', function(result) {
-                document.getElementById('meaning').innerHTML = result.userKeyIds;
+                if (!result.userKeyIds) {
+                    document.getElementById('meaning').innerHTML = "No Item in the list";
+                } else document.getElementById('meaning').innerHTML = result.userKeyIds;
+
             });
         });
     });
@@ -110,6 +126,7 @@ window.addEventListener("load", function() {
 
     $('#clear').click(function() {
         chrome.storage.sync.clear();
+        localStorage.setItem("count", "0");
     });
 
     // Helper method to parse the title tag from the response.
