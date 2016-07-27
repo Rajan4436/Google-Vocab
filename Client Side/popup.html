@@ -1,51 +1,70 @@
 <!doctype html>
 <html>
-  <head>
-    <title>Data Scraped with PHP</title>
-    <style>
-      body {
-        min-width: 357px;
-        overflow-x: hidden;
-      }
 
-      img {
-        margin: 5px;
-        border: 2px solid black;
-        vertical-align: middle;
-        width: 75px;
-        height: 75px;
-      }
+<head>
+  <title>Data Scraped with PHP</title>
+  <style>
+    body {
+      min-width: 400px;
+      overflow-x: hidden;
+    }
+    
+    img {
+      margin: 5px;
+      border: 2px solid black;
+      vertical-align: middle;
+      width: 75px;
+      height: 75px;
+    }
+    
+    #revert {
+      padding: 10px;
+      background-color: #009ECE;
+      color: white;
+      margin-top: 10px;
+    }
+    
+    #meaning1 {
+      background-color: #009ECE;
+    }
+    
+    #meaning2 {
+      background-color: #FF9E00;
+    }
+    
+    button {
+      background-color: #4CAF50;
+      /* Green */
+      border: none;
+      color: white;
+      padding: 5px 12px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 12px;
+      cursor: pointer;
+      margin: 9px;
+    }
+    
+    .btn {
+      width: 100%;
+    }
+  </style>
+  
+</head>
 
-      #word{
+<body>
+  <!-- <div id="meaning1"></div> -->
+  <div id="meaning"></div>
+  <div id="revert">Loading...</div>
+  <div class="btn">
+    <button id="add">Add</button>
+    <button id="clear">Clear</button>
+    <button id="show">Show All</button>
+    <button id="site">Go to the Site</button>
+  </div>
+  <script src="jquery-1.8.0.min.js"></script>
+  <script src="popup.js"></script>
+</body>
 
-      }
-
-     
-    </style>
-
-    <!--
-		- This is a modified version of the Chrome Extension Tutorial by
-		- Google available at http://ln0.in/cdu
-     -->
-  </head>
-  <body >
-  	<table>
-  		<tr>
-  			<td>
-			  	<div id="word"></div>
-  			</td>
-  			<td>
-			  	<div id="meaning"></div>
-  			</td>
-  		</tr>
-  	</table>
-	  <div id="revert">Loading...</div>
-	  <button id="add">Add</button>
-	  <button id="clear">Clear</button>
-	  <button id="show">Show All</button>
-	  <button id="site">Go to Site</button>
-	  <script src="jquery-1.8.0.min.js"></script>
-    <script src="popup.js"></script>
-  </body>
 </html>
-
