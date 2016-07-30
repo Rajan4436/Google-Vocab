@@ -84,8 +84,13 @@ window.addEventListener("load", function() {
             $("form").css("display", "block");
 
             $('#btn').click(function() {
-                $('#revert').html("Working....");
                 var str = $('#link').val();
+                if (str.search(/^[A-z]+$/)) {
+                    $('#meaning').html("Enter Valid Text");
+                    return;
+                }
+                $('#revert').html("Working....");
+                $('#meaning').html(null);
                 str = str.toLowerCase();
 
                 $(document).on('submit', '#reg-form', function() {
@@ -112,15 +117,16 @@ window.addEventListener("load", function() {
 
         $('#show').click(function() {
             chrome.storage.sync.get('userKeyIds', function(result) {
-                if (!result.userKeyIds) {
+                if (!result.userKeyIds || result.userKeyIds == "") {
                     document.getElementById('meaning').innerHTML = "No Item in the list";
                 } else {
                     var set = result.userKeyIds;
-                    set = set.toString();
+                    // console.log($(set));
+                    // set = set.toString();
                     // set = set.replace(/,/g, "#");
                     // document.getElementById('meaning').innerHTML =  set;
-                    var set = set.split(',');
-                    var cList = $('ul#mylist')
+                    //var set = set.split(",");
+                    var cList = $('#mylist')
 
                     $.each(set, function(i) {
                         var li = $('<li/>')
@@ -128,7 +134,7 @@ window.addEventListener("load", function() {
                             .text(set[i])
                             .appendTo(cList);
 
-                        var check = $('<input/>') //<input type="checkbox" class="chkbox" value="101">
+                        var check = $('<input/>')
                             .addClass('chkbox')
                             .attr('type', 'checkbox')
                             .appendTo(li);
@@ -140,28 +146,22 @@ window.addEventListener("load", function() {
                         var data = [];
 
                         $('#mylist').each(function() {
-                            var listText = '';
                             $(this).find('li').each(function() {
-
                                 // cache jquery var
                                 var current = $(this);
                                 // check if our current li has children (sub elements)
                                 // if it does, skip it
-                                // ps, you can work with this by seeing if the first child
-                                // is a UL with blank inside and odd your custom BLANK text
-                                if (current.children().size() > 0) {
-                                    $('#meaning').html("here");
-                                }
-                                // add current text to our current phrase
-                                listText += current.text();
+                                data.push(current.text());
                             });
-                            // now that our current phrase is completely build we add it to our outer array
-                            data.push(listText);
                         });
-                        // $('#meaning').html(data);
+
                         chrome.storage.sync.set({
                             userKeyIds: data
                         }, function() {});
+                    });
+
+                    $('#site').click(function() {
+                        site(str);
                     });
                 }
             });
@@ -172,22 +172,24 @@ window.addEventListener("load", function() {
     //Jquery ADD Click handler to add WORD-MEANING set in storage
     function add(str, msg) {
         chrome.storage.sync.get({
-            userKeyIds: "<b>The list of Words</b>"
+            userKeyIds: null
         }, function(result) {
             // the input argument is ALWAYS an object containing the queried keys
             // so we select the key we need
 
-            if (!localStorage.getItem("count")) {
-                localStorage.setItem("count", "0");
-            }
-            var i = localStorage.getItem("count");
-            var ticker = parseInt(i);
-            ticker++;
+            // ### CODE FOR INDEXES
+
+            // if( !localStorage.getItem("count")){
+            //		localStorage.setItem("count","0");
+            // } 
+            // var i = localStorage.getItem("count");
+            // var ticker = parseInt(i);
+            // ticker++;
+            // ####
 
             var userKeyIds = result.userKeyIds;
             var arr = $.makeArray(userKeyIds);
-            arr.push(ticker + ". " + str + ":- " + msg);
-            // arr = arr.join(" ");
+            arr.push(str + " :-  " + msg);
 
             chrome.storage.sync.set({
                 userKeyIds: arr
@@ -198,17 +200,22 @@ window.addEventListener("load", function() {
                 //document.getElementById('meaning').innerHTML =  result.userKeyIds;
                 //	});
             });
-            localStorage.setItem("count", ticker.toString());
+            // localStorage.setItem("count",ticker.toString());
         });
     } //add
 
 
     function site(str) {
-        chrome.tabs.create({
-            'url': "http://yourdictionary.com/" + str.toLowerCase()
-        }, function(tab) {
-            // Tab opened.
-        });
+
+        if (!str) {
+            $('#meaning').html("No word Selected, select a word first");
+        } else {
+            chrome.tabs.create({
+                'url': "http://yourdictionary.com/" + str.toLowerCase()
+            }, function(tab) {
+                // Tab opened.
+            });
+        }
     }
 
     $('#clear').click(function() {
