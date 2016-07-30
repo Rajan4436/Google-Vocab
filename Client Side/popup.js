@@ -120,6 +120,7 @@ window.addEventListener("load", function() {
                 if (!result.userKeyIds || result.userKeyIds == "") {
                     document.getElementById('meaning').innerHTML = "No Item in the list";
                 } else {
+                    $('#meaning').html(null);
                     var set = result.userKeyIds;
                     // console.log($(set));
                     // set = set.toString();
