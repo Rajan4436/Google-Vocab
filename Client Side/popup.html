@@ -1,70 +1,180 @@
 <!doctype html>
 <html>
+  <head>
+    <title>Data Scraped with PHP</title>
+    <style>
+      body {
+        min-width: 400px;
+        overflow-x: hidden;
+      }
 
-<head>
-  <title>Data Scraped with PHP</title>
-  <style>
-    body {
-      min-width: 400px;
-      overflow-x: hidden;
-    }
-    
-    img {
-      margin: 5px;
-      border: 2px solid black;
-      vertical-align: middle;
-      width: 75px;
-      height: 75px;
-    }
-    
-    #revert {
-      padding: 10px;
-      background-color: #009ECE;
-      color: white;
-      margin-top: 10px;
-    }
-    
-    #meaning1 {
-      background-color: #009ECE;
-    }
-    
-    #meaning2 {
-      background-color: #FF9E00;
-    }
-    
-    button {
-      background-color: #4CAF50;
-      /* Green */
-      border: none;
-      color: white;
-      padding: 5px 12px;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      font-size: 12px;
-      cursor: pointer;
-      margin: 9px;
-    }
-    
-    .btn {
-      width: 100%;
-    }
-  </style>
-  
-</head>
+      img {
+        margin: 5px;
+        /*border: 2px solid black;*/
+        vertical-align: middle;
+       	width: 20px;
+				height: 20px;
+				cursor: pointer;
+      }
 
-<body>
-  <!-- <div id="meaning1"></div> -->
-  <div id="meaning"></div>
-  <div id="revert">Loading...</div>
-  <div class="btn">
-    <button id="add">Add</button>
-    <button id="clear">Clear</button>
-    <button id="show">Show All</button>
-    <button id="site">Go to the Site</button>
-  </div>
-  <script src="jquery-1.8.0.min.js"></script>
-  <script src="popup.js"></script>
-</body>
+      #revert{
+      	padding: 10px;
+      	background-color: #009ECE;
+      	color: white;
+      	margin-top: 10px;
+      }
 
+      #meaning1{
+      	background-color: #009ECE;
+      }
+
+      #meaning2{
+      	background-color: #FF9E00;
+      }
+     
+     	button {
+			    background-color: #4CAF50; /* Green */
+			    border: none;
+			    color: white;
+			    padding: 5px 30px;
+			   	text-align: center;
+			    text-decoration: none;
+			    display: inline-block;
+			    font-size: 12px;
+			    cursor: pointer;
+			    margin: 5px;
+			    border-radius: 4px;
+			}
+
+			.btn{
+				width: 100%;
+			}
+
+			li, #revert{
+				text-align: justify;
+			}
+
+			/*#mylist{
+				padding:15px;
+			}*/
+
+			p{
+				padding: 5px;
+				cursor: pointer;
+			}
+
+			form{
+				display: none;
+			}
+
+			input[type=text], select {
+			    width: 100%;
+			    padding: 12px 20px;
+			    margin: 8px 0;
+			    display: inline-block;
+			    border: 1px solid #ccc;
+			    border-radius: 4px;
+			    box-sizing: border-box;
+			}
+
+			input[type=submit] {
+			    width: 100%;
+			    background-color: #4CAF50;
+			    color: white;
+			    padding: 14px 20px;
+			    margin: 8px 0;
+			    border: none;
+			    border-radius: 4px;
+			    cursor: pointer;
+			}
+
+			input[type=submit]:hover , button:hover{
+			    background-color: #45a049;
+			}
+
+			#meaning{
+				color: red;
+			}
+
+			#fvpp-blackout {
+			  display: none;
+			  z-index: 499;
+			  position: fixed;
+			  width: 100%;
+			  height: 100%;
+			  top: 0;
+			  left: 0;
+			  background: #000;
+			  opacity: 0.5;
+			}
+
+			#google-welcome-message, #nongoogle-welcome-message {
+			  display: none;
+			  z-index: 500;
+			  position: relative;
+			  border-radius: 5px;
+			  width: 50%;
+			  left: 20%;
+			  top: 20%;
+			  padding: 20px 20px;
+			  background: #FFF;
+			}
+
+			#fvpp-close {
+			  position: absolute;
+			  top: 10px;
+			  right: 20px;
+			  transition: all 200ms;
+			  cursor: pointer;
+			}
+
+			#fvpp-dialog h2 {
+			  font-size: 2em;
+			  margin: 0;
+			}
+
+			#fvpp-dialog p { margin: 0; }
+		
+    </style>
+
+  </head>
+  <body >
+  	<header>
+  		<img src="about.png" id="about" alt="About" title="About">
+  		<img src="gear.png" id="help" alt="Help" title="Help">
+  	</header>
+  	<div id="slide">
+  		<
+  	</div>
+  	<div id="revert" class="box">Loading...</div>
+  	<div id="meaning" class="box"></div>
+  	<ol id="mylist">
+  		
+  	</ol>
+  	<div id="google-welcome-message">
+		  <h2>This is your first visit</h2>
+		  <p>You will see this page when you search the meaning of a single word on google</p>
+		</div>
+
+	 	<div id="nongoogle-welcome-message">
+		  <h2>This is your first visit</h2>
+		  <p>You will see this page when you are not using google</p>
+		</div>
+
+	  <div class="btn">
+	  	<button id="add">Save this Word</button>
+		  <button id="clear">Clear All</button>
+	  	<button id="show">Show All</button>
+	 		<button id="site">Go to Original WebSite</button>
+	 		<button id="del">Delete Selected Words</button>
+	  </div>
+	  <form id="reg-form">
+		  <input type="text" name="link" id="link" placeholder="Enter the word" required>
+		  <input type="submit" name="btn" id="btn" value="Try Manual Search">
+	  </form>
+	  <div id="result"></div>
+	  <script src="jquery-1.8.0.min.js"></script>
+    <script src="popup.js"></script>
+    <script src="jquery.firstVisitPopup.js"></script>
+  </body>
 </html>
