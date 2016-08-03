@@ -16,7 +16,7 @@ window.addEventListener("load", function()
 	// }
 
 	//Jquery ADD Click handler to add WORD-MEANING set in storage
-	function add(str,msg){		
+	function save(str,msg){		
 	  chrome.storage.sync.get({userKeyIds: null}, function (result) {
 	    // the input argument is ALWAYS an object containing the queried keys
 	    // so we select the key we need
@@ -68,12 +68,40 @@ window.addEventListener("load", function()
 	  return text.match('<title>(.*)?</title>')[1];
 	}
 
+	function searchVocab(word){
+    $('#revert').css("display","none");
+    $('#load').css("display","block");
+	  if(word.includes('.')){
+	  	word =  word.substr(0,word.indexOf('.'));
+	  }
+	  if(word.includes(',')){
+	  	word =  word.substr(0,word.indexOf(','));
+	  }  
 
+		$.ajax({
+        type: "POST",
+        url: "http://sarcnitj.com/Server%20Side/index.php",
+        data: {
+            link: word
+        }
+    })
+    .done(function (msg) {
+		    word =  word.toUpperCase();
+		    var def =	"<strong>"+"Meaning of "+word+":<br>" +  "</strong>" +msg;
+				$('#load').css("display","none");
+				$('#revert').css("display","block");
+			  $('#hiddenDef').html(msg);
+	  	  $('#hiddenWord').html(word);
+		    $("#revert").html(def).addClass('animated bounceIn');
+		});
+			
+	};
 	// checkNetConnection();
 	chrome.tabs.query({'active': true, currentWindow:true}, function (tabs) {
 
 	  var link =  tabs[0].url;
 	  if(link.includes('www.google')){
+	  		
 	  		$('#revert').css("display","none");
 				$('#load').css("display","block");
 
@@ -132,21 +160,15 @@ window.addEventListener("load", function()
 	  			//got meaning of WORD in msg variable
 		  		$('#revert').css("display","block");
 		  		set = "<strong>"+"Meaning of "+str+":<br>" +  "</strong>" +msg;  
-					$('#revert').html(set).addClass('animated bounceIn');
+					$('#hiddenDef').html(msg);
+					$('#hiddenWord').html(str);
 					$('#load').css("display","none");
-					
-					$('#add').click(function(){
-						add(str,msg);
-					});
-
-					$('#site').click(function(){
-						site(str);
-					});
-
+					$('#revert').html(set).addClass('animated bounceIn');
 				});
 		}
 
 		else{
+
 			$('#nongoogle-welcome-message').firstVisitPopup({
 			  cookieName : 'nongoogle',
 			  showAgainSelector: '#show-message'
@@ -168,22 +190,28 @@ window.addEventListener("load", function()
 							$.post('http://sarcnitj.com/Server%20Side/index.php', {link:str}, function(msg){
 								str = str.toUpperCase();
 					  	  var def =	"<strong>"+"Meaning of "+str+":<br>" +  "</strong>" +msg; 
-						    $("#revert").html(def).addClass('animated bounceIn');
-								$('#load').css("display","none");
+					  	  $('#hiddenDef').html(msg);
+					  	  $('#hiddenWord').html(str);
+						    $('#load').css("display","none");
 					  		$('#revert').css("display","block");
-						    $('#add').click(function(){
-									add(str,msg);
-								});   
+						    $("#revert").html(def).addClass('animated bounceIn');
 						  });
 						  return false;
 					 	});
 					
-					$('#site').click(function(){
-						site(str);
-					});
 			});
 		}
 		
+		$('#add').click(function(){
+			var word = $('#hiddenWord').text();
+			var msg = $('#hiddenDef').text();
+			save(word,msg);
+		}); 
+
+		$('#site').click(function(){
+			var word = $('#hiddenWord').text();
+			site(word);
+		});
 
 		$('#show').click(function(){
 	    chrome.storage.sync.get('userKeyIds', function (result) {
@@ -192,6 +220,7 @@ window.addEventListener("load", function()
 	    	}
 	    	else  {
 	    		$('#alert').html(null);
+	    		$('#mylist').html(null);
 	    		var set = result.userKeyIds;
 	    		// console.log($(set));
 	    		// set = set.toString();
@@ -232,77 +261,17 @@ window.addEventListener("load", function()
 	            chrome.storage.sync.set({userKeyIds: data}, function () {
 					    });
 					});
-
-					$('#site').click(function(){
-						site(str);
-					});
-	    	}
-	  	});
+	    	} //else
+	  	}); //get
 	  }); //show
 	}); //Tabs Query
 
 
 	//About 
 	$('#about').click(function(){
-
+		$('#slide').slideToggle();
+		$('#slide').css("display","block");
 	});
-
-
-	function searchVocab(word){
-    $('#revert').css("display","none");
-    $('#load').css("display","block");
-	  if(word.includes('.')){
-	  	word =  word.substr(0,word.indexOf('.'));
-	  }
-	  if(word.includes(',')){
-	  	word =  word.substr(0,word.indexOf(','));
-	  }  
-
-	  //   var Notification=(function(){
-	  //   var notification=null;
-	  
-	  //   return {
-	  //       display:function(opt){
-	  //    			      notification=chrome.notifications.create(opt);
-			//             notification.show();
-			//         },
-	  //       hide:function(){
-			//             notification.close();
-			//         }
-			//     };
-			// })();
-
-			$.ajax({
-		        type: "POST",
-		        url: "http://sarcnitj.com/Server%20Side/index.php",
-		        data: {
-		            link: word
-		        }
-		    })
-		    .done(function (msg) {
-				    // var opt = {
-				    //     type: "basic",
-				    //     title: "Meaning of "+ query.toUpperCase(),
-				    //     message: msg,
-				    //     iconUrl: "icon.png"
-				    // };
-				    // Notification.display(opt);
-				    word =  word.toUpperCase();
-				    var def =	"<strong>"+"Meaning of "+word+":<br>" +  "</strong>" +msg;
-    				$('#load').css("display","none");
-						$('#revert').css("display","block");
-				    $("#revert").html(def).addClass('animated bounceIn');
-
-				    $('#add').click(function(){
-								add(word,msg);
-						}); 
-	  		});
-
-	  		$('#site').click(function(){
-						site(word);
-				});
-	};
-
 
 	$("#revert").click(function(e){
     s = window.getSelection();
@@ -329,3 +298,5 @@ window.addEventListener("load", function()
 	// });
 
 }, false);
+ 	
+
