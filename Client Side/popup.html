@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>Data Scraped with PHP</title>
+    <title>G Vocab</title>
     <style>
       body {
         min-width: 400px;
@@ -22,6 +22,8 @@
       	background-color: #009ECE;
       	color: white;
       	margin-top: 10px;
+      	border-radius: 5px;
+      	box-shadow: 0 0 10px #888888;
       }
 
       #meaning1{
@@ -42,21 +44,26 @@
 			    display: inline-block;
 			    font-size: 12px;
 			    cursor: pointer;
-			    margin: 5px;
+			    margin: 5px 6px;
 			    border-radius: 4px;
 			}
 
 			.btn{
 				width: 100%;
+				text-align: center;
 			}
 
 			li, #revert{
 				text-align: justify;
 			}
 
-			/*#mylist{
+			#revert{
+				cursor: default;
+			}
+
+			#help{
 				padding:15px;
-			}*/
+			}
 
 			p{
 				padding: 5px;
@@ -92,7 +99,7 @@
 			    background-color: #45a049;
 			}
 
-			#meaning{
+			#alert{
 				color: red;
 			}
 
@@ -135,19 +142,43 @@
 
 			#fvpp-dialog p { margin: 0; }
 		
+			#load{
+				font-size: 40px;
+				text-align: center;
+				color: #dbdada;
+				display: none;
+			}
     </style>
 
   </head>
+  <link rel="stylesheet" type="text/css" href="animate.css">
   <body >
   	<header>
   		<img src="about.png" id="about" alt="About" title="About">
   		<img src="gear.png" id="help" alt="Help" title="Help">
   	</header>
   	<div id="slide">
-  		<
+  		<table>
+  			<tr>
+  				<th>When you are on google search page</th>
+  			</tr>
+  			<tr>	
+  				<td>
+  					<ol id="help">
+  						<li>Try finding meaning of any word on google, it will automatically reflect in the G Vocab while opening it.</li>
+  						<li>The searched word can be saved for future references, you can save as many words as you want.</li>
+  						<li>The list of saved words can be seen by clicking "Show All" button.</li>
+  						<li>You can delete saved words permanently either by multiple selection using checkboxes or at once by "Delete All" button.</li>
+  						<li>For further details and usage of the particular word, you can visit the website directly by clicking "Go to the Site".</li>
+  						<li>You can also search by by simply clicking on a word inside blue box. </li>
+  					</ol>
+  				</td>
+  			</tr>
+  		</table>
   	</div>
-  	<div id="revert" class="box">Loading...</div>
-  	<div id="meaning" class="box"></div>
+  	<div id="load">Loading...</div>
+  	<div id="revert" class="box"></div>
+  	<div id="alert" class="box"></div>
   	<ol id="mylist">
   		
   	</ol>
@@ -178,3 +209,4 @@
     <script src="jquery.firstVisitPopup.js"></script>
   </body>
 </html>
+
