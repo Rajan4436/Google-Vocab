@@ -49,7 +49,7 @@ window.addEventListener("load", function()
 	function site(str){
 
 		if(!str){
-			$('#meaning').html("No word Selected, select a word first");
+			$('#alert').html("No word Selected, select a word first");
 		}
 		else{
 			chrome.tabs.create({'url': "http://yourdictionary.com/"+str.toLowerCase() }, function(tab) {
@@ -74,6 +74,8 @@ window.addEventListener("load", function()
 
 	  var link =  tabs[0].url;
 	  if(link.includes('www.google')){
+	  		$('#revert').css("display","none");
+				$('#load').css("display","block");
 
 	    	//########### The set of links tested  ###################//
 
@@ -128,7 +130,10 @@ window.addEventListener("load", function()
 		    .done(function (msg) {
 	  			str = str.toUpperCase();
 	  			//got meaning of WORD in msg variable
-	        document.getElementById('revert').innerHTML = "<strong>"+"Meaning of "+str+":<br>" +  "</strong>" +msg;  
+		  		$('#revert').css("display","block");
+		  		set = "<strong>"+"Meaning of "+str+":<br>" +  "</strong>" +msg;  
+					$('#revert').html(set).addClass('animated bounceIn');
+					$('#load').css("display","none");
 					
 					$('#add').click(function(){
 						add(str,msg);
@@ -146,31 +151,33 @@ window.addEventListener("load", function()
 			  cookieName : 'nongoogle',
 			  showAgainSelector: '#show-message'
 			});
-			document.getElementById('revert').innerHTML = "It is not a Google Search Page, Search will not work but you can see the list by clicking 'Show all' button";
+			document.getElementById('revert').innerHTML = "It is not a Google Search Page, Automatic search will not work but you can see the list by clicking 'Show all' button, or can try manual search";
 			$('#p').css("display","none");
 			$("form").css("display","block");
 		
 			$('#btn').click(function(){
+	  			$('#revert').css("display","none");
 					var str = $('#link').val();
 					str = str.replace(/\s+/g, '');
-					if(str.search(/^[A-z]+$/)){ $('#meaning').html("Enter Valid Text"); return ;}
-					$('#revert').html("Working....");
-					$('#meaning').html(null);
-					str = str.toLowerCase();
-					  
-					$(document).on('submit', '#reg-form', function(){  
-						$.post('http://sarcnitj.com/Server%20Side/index.php', {link:str}, function(msg){
-							str = str.toUpperCase();
-				  	  var def =	"<strong>"+"Meaning of "+str+":<br>" +  "</strong>" +msg; 
-					    $("#revert").html(def);
-
-					    $('#add').click(function(){
-								add(str,msg);
-							});   
-					  });
-					  return false;
-				 	});
-
+					if(str.search(/^[A-z]+$/) == -1 ){ $('#alert').html("Enter Valid Text"); return ;}
+						$('#load').css("display","block");
+						$('#alert').html(null);
+						str = str.toLowerCase();
+						  
+						$(document).on('submit', '#reg-form', function(){  
+							$.post('http://sarcnitj.com/Server%20Side/index.php', {link:str}, function(msg){
+								str = str.toUpperCase();
+					  	  var def =	"<strong>"+"Meaning of "+str+":<br>" +  "</strong>" +msg; 
+						    $("#revert").html(def).addClass('animated bounceIn');
+								$('#load').css("display","none");
+					  		$('#revert').css("display","block");
+						    $('#add').click(function(){
+									add(str,msg);
+								});   
+						  });
+						  return false;
+					 	});
+					
 					$('#site').click(function(){
 						site(str);
 					});
@@ -181,10 +188,10 @@ window.addEventListener("load", function()
 		$('#show').click(function(){
 	    chrome.storage.sync.get('userKeyIds', function (result) {
 	    	if(!result.userKeyIds || result.userKeyIds == ""){
-	        document.getElementById('meaning').innerHTML = "No Item in the list";
+	        document.getElementById('alert').innerHTML = "No Item in the list";
 	    	}
 	    	else  {
-	    		$('#meaning').html(null);
+	    		$('#alert').html(null);
 	    		var set = result.userKeyIds;
 	    		// console.log($(set));
 	    		// set = set.toString();
@@ -237,13 +244,20 @@ window.addEventListener("load", function()
 
 	//About 
 	$('#about').click(function(){
-		
+
 	});
 
-	searchVocab = function(word){
-    var query = word.selectionText;
-		$('#revert').html("Working....");
-	    
+
+	function searchVocab(word){
+    $('#revert').css("display","none");
+    $('#load').css("display","block");
+	  if(word.includes('.')){
+	  	word =  word.substr(0,word.indexOf('.'));
+	  }
+	  if(word.includes(',')){
+	  	word =  word.substr(0,word.indexOf(','));
+	  }  
+
 	  //   var Notification=(function(){
 	  //   var notification=null;
 	  
@@ -262,7 +276,7 @@ window.addEventListener("load", function()
 		        type: "POST",
 		        url: "http://sarcnitj.com/Server%20Side/index.php",
 		        data: {
-		            link: query
+		            link: word
 		        }
 		    })
 		    .done(function (msg) {
@@ -273,26 +287,45 @@ window.addEventListener("load", function()
 				    //     iconUrl: "icon.png"
 				    // };
 				    // Notification.display(opt);
-				    query =  query.toUpperCase();
-				    var def =	"<strong>"+"Meaning of "+query+":<br>" +  "</strong>" +msg; 
-				    $("#revert").html(def);
+				    word =  word.toUpperCase();
+				    var def =	"<strong>"+"Meaning of "+word+":<br>" +  "</strong>" +msg;
+    				$('#load').css("display","none");
+						$('#revert').css("display","block");
+				    $("#revert").html(def).addClass('animated bounceIn');
 
 				    $('#add').click(function(){
-								add(query,msg);
+								add(word,msg);
 						}); 
 	  		});
 
 	  		$('#site').click(function(){
-						site(query);
+						site(word);
 				});
 	};
 
-	chrome.contextMenus.removeAll(function() {
-		chrome.contextMenus.create({
-		 title: "Search in Vocab",
-		 contexts:["selection"],  // ContextType
-		 onclick: searchVocab // A callback function
-		});
-	});
+
+	$("#revert").click(function(e){
+    s = window.getSelection();
+    var range = s.getRangeAt(0);
+    var node = s.anchorNode;
+    while(range.toString().indexOf(' ') != 0) {                 
+      range.setStart(node,(range.startOffset -1));
+    }
+    range.setStart(node, range.startOffset +1);
+    do{
+      range.setEnd(node,range.endOffset + 1);
+
+    }while(range.toString().indexOf(' ') == -1 && range.toString().trim() != '');
+    var str = range.toString().trim();
+    searchVocab(str);
+  });
+
+	// chrome.contextMenus.removeAll(function() {
+	// 	chrome.contextMenus.create({
+	// 	 title: "Search in Vocab",
+	// 	 contexts:["selection"],  // ContextType
+	// 	 onclick: searchVocab // A callback function
+	// 	});
+	// });
 
 }, false);
