@@ -39,6 +39,7 @@ window.addEventListener("load", function()
 	        // you can use strings instead of objects
 	        // if you don't  want to define default values
 	     // chrome.storage.sync.get('userKeyIds', function () {
+	     	$('#alert').html("Word saved successfully");
 	  	//	});
 			});
 			// localStorage.setItem("count",ticker.toString());
@@ -121,7 +122,6 @@ window.addEventListener("load", function()
 				  cookieName : 'google',
 				  showAgainSelector: '#show-message'
 				});
-				
 				//Splitting link on the position of '?', '&' or '#'
 				var results = (link.includes('#')?link.substr(1).split('#'):link.substr(1).split('?'));
 				if(link.includes('&q=')){ var results = link.split('&');}
@@ -281,6 +281,35 @@ window.addEventListener("load", function()
 	  	}); //get
 	  }); //show
 	}); //Tabs Query
+
+	//To get selected value from the webpage
+	chrome.tabs.executeScript( {
+	  code: "window.getSelection().toString();"
+	  }, function(selection) {
+		if(selection[0] != '' )
+		{	
+			$('#revert').css("display","none");
+	    $('#load').css("display","block");
+	    var word = selection[0];
+	    word = word.trim();
+	    $.ajax({
+	        type: "POST",
+	        url: "http://sarcnitj.com/Server%20Side/index.php", //http://lexicon.byethost18.com/bytehostphp.phpp	
+	        data: {
+	            link: word
+	        }
+	    })
+	    .done(function (msg) {
+			    word =  word.toUpperCase();
+			    var def =	"<strong>"+"Meaning of "+word+" :<br>" +  "</strong>" +msg;
+					$('#load').css("display","none");
+					$('#revert').css("display","block");
+				  $('#hiddenDef').html(msg);
+		  	  $('#hiddenWord').html(word);
+		  	  $("#revert").html(def).addClass('animated bounceIn');
+			});
+	  }
+	});
 
 	//About
 	$('#about').click(function(){
