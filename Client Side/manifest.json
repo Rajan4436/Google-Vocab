@@ -1,15 +1,19 @@
 {
   "manifest_version": 2,
 
-  "name": "Google Vocab",
-  "description": "This will save the search result of vocabulary words with meaning.",
+  "name": "Lexicon",
+  "description": "Lexicon is a chrome extension to save all the words that you search frequently on 
+  google while reading any article. It will help you to memorize the words for your further reference.",
   "version": "1.0",
 
   "permissions": [
     "http://sarcnitj.com/Server%20Side/",
-    "tabs",
-    "storage"
+    "storage",
+    "notifications",
+    "contextMenus",
+    "tabs"
   ],
+
   "browser_action": {
     "default_icon": "icon.png",
     "default_popup": "popup.html"
