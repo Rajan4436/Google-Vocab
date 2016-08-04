@@ -59,8 +59,10 @@ window.addEventListener("load", function()
 	}
 
 	$('#clear').click(function(){
-		chrome.storage.sync.clear();	
-		localStorage.setItem("count","0");		
+		alert("Are you sure, whole list will be deleted permanently")
+		chrome.storage.sync.clear();
+		$('#mylist').html(null);	
+		// localStorage.setItem("count","0");		
 	});
 
 	// Helper method to parse the title tag from the response.
@@ -77,17 +79,22 @@ window.addEventListener("load", function()
 	  if(word.includes(',')){
 	  	word =  word.substr(0,word.indexOf(','));
 	  }  
-
+	  if(word.includes(';')){
+	  	word =  word.substr(0,word.indexOf(';'));
+	  }  
+	  if(word.includes('--')){
+	  	word =  word.substr(word.indexOf('--'));
+	  }
 		$.ajax({
         type: "POST",
-        url: "http://sarcnitj.com/Server%20Side/index.php",
+        url: "http://sarcnitj.com/Server%20Side/index.php", //http://lexicon.byethost18.com/bytehostphp.phpp	
         data: {
             link: word
         }
     })
     .done(function (msg) {
 		    word =  word.toUpperCase();
-		    var def =	"<strong>"+"Meaning of "+word+":<br>" +  "</strong>" +msg;
+		    var def =	"<strong>"+"Meaning of "+word+" :<br>" +  "</strong>" +msg;
 				$('#load').css("display","none");
 				$('#revert').css("display","block");
 			  $('#hiddenDef').html(msg);
@@ -150,7 +157,7 @@ window.addEventListener("load", function()
 				//Making post request to PHP file to reach the site http://yourdictionary.com
 				$.ajax({
 		        type: "POST",
-		        url: "http://sarcnitj.com/Server%20Side/index.php",
+		        url: "http://sarcnitj.com/Server%20Side/index.php", //http://lexicon.byethost18.cp	m/bytehostphp.php
 		        data: {
 		            link: str
 		        }
@@ -159,7 +166,7 @@ window.addEventListener("load", function()
 	  			str = str.toUpperCase();
 	  			//got meaning of WORD in msg variable
 		  		$('#revert').css("display","block");
-		  		set = "<strong>"+"Meaning of "+str+":<br>" +  "</strong>" +msg;  
+		  		set = "<strong>"+"Meaning of "+str+" :<br>" +  "</strong>" +msg;  
 					$('#hiddenDef').html(msg);
 					$('#hiddenWord').html(str);
 					$('#load').css("display","none");
@@ -182,22 +189,29 @@ window.addEventListener("load", function()
 					var str = $('#link').val();
 					str = str.replace(/\s+/g, '');
 					if(str.search(/^[A-z]+$/) == -1 ){ $('#alert').html("Enter Valid Text"); return ;}
-						$('#load').css("display","block");
-						$('#alert').html(null);
-						str = str.toLowerCase();
-						  
-						$(document).on('submit', '#reg-form', function(){  
-							$.post('http://sarcnitj.com/Server%20Side/index.php', {link:str}, function(msg){
-								str = str.toUpperCase();
-					  	  var def =	"<strong>"+"Meaning of "+str+":<br>" +  "</strong>" +msg; 
-					  	  $('#hiddenDef').html(msg);
-					  	  $('#hiddenWord').html(str);
-						    $('#load').css("display","none");
-					  		$('#revert').css("display","block");
-						    $("#revert").html(def).addClass('animated bounceIn');
-						  });
-						  return false;
-					 	});
+					$('#load').css("display","block");
+					$('#alert').html(null);
+					str = str.toLowerCase();
+					  
+					$("#reg-form").submit(function(){  
+						$.ajax({
+		        type: "POST",
+		        url: "http://sarcnitj.com/Server%20Side/index.php", //http://lexicon.byethost18.com/bytehostphp.php	
+		        data: {
+		            link: str
+		        }
+			    })
+			    .done(function (msg){
+							str = str.toUpperCase();
+				  	  var def =	"<strong>"+"Meaning of "+str+" :<br>" +  "</strong>" +msg; 
+				  	  $('#hiddenDef').html(msg);
+				  	  $('#hiddenWord').html(str);
+					    $('#load').css("display","none");
+				  		$('#revert').css("display","block");
+					    $("#revert").html(def).addClass('animated bounceIn');
+					  });
+					  return false;
+				 	});
 					
 			});
 		}
@@ -217,6 +231,7 @@ window.addEventListener("load", function()
 	    chrome.storage.sync.get('userKeyIds', function (result) {
 	    	if(!result.userKeyIds || result.userKeyIds == ""){
 	        document.getElementById('alert').innerHTML = "No Item in the list";
+	        $('#mylist').toggle("linear");
 	    	}
 	    	else  {
 	    		$('#alert').html(null);
@@ -243,6 +258,7 @@ window.addEventListener("load", function()
 									.appendTo(li);
 					});
 
+	    		$('#mylist').toggle("linear");
 
 					$('#del').click(function(){
 							$('#mylist li').has('input:checked').remove();
@@ -266,11 +282,16 @@ window.addEventListener("load", function()
 	  }); //show
 	}); //Tabs Query
 
-
-	//About 
+	//About
 	$('#about').click(function(){
-		$('#slide').slideToggle();
-		$('#slide').css("display","block");
+		$('#aboutslide').slideToggle();
+		$('#aboutslide').css("display","block");
+	});
+
+	//Help 
+	$('#help').click(function(){
+		$('#helpslide').slideToggle();
+		$('#helpslide').css("display","block");
 	});
 
 	$("#revert").click(function(e){
