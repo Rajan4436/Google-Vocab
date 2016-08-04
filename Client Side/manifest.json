@@ -11,7 +11,9 @@
     "storage",
     "notifications",
     "contextMenus",
-    "tabs"
+    "tabs",
+    "http://*/",
+    "https://*/"
   ],
 
   "browser_action": {
