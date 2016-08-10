@@ -14,7 +14,24 @@ window.addEventListener("load", function()
 	// 	});
 	// 	return re;
 	// }
-
+	function ajaxcall(word){
+		$.ajax({
+        type: "POST",
+        url: (!("http://sarcnitj.com/Server%20Side/index.php"))?("http://sarcnitj.com/Server%20Side/index.php"):("http://utkansh.com/do_not_delete_this_folder/index.php"), //http://lexicon.byethost18.com/bytehostphp.phpp	
+        data: {
+            link: word
+        }
+    })
+    .done(function (msg) {
+		    word =  word.toUpperCase();
+		    var def =	"<strong>"+"Meaning of "+word+" :<br>" +  "</strong>" +msg;
+				$('#load').css("display","none");
+				$('#revert').css("display","block");
+			  $('#hiddenDef').html(msg);
+	  	  $('#hiddenWord').html(word);
+		    $("#revert").html(def).addClass('animated bounceIn');
+		});
+	}
 	//Jquery ADD Click handler to add WORD-MEANING set in storage
 	function save(str,msg){		
 	  chrome.storage.sync.get({userKeyIds: null}, function (result) {
@@ -86,22 +103,7 @@ window.addEventListener("load", function()
 	  if(word.includes('--')){
 	  	word =  word.substr(word.indexOf('--'));
 	  }
-		$.ajax({
-        type: "POST",
-        url: "http://sarcnitj.com/Server%20Side/index.php", //http://lexicon.byethost18.com/bytehostphp.phpp	
-        data: {
-            link: word
-        }
-    })
-    .done(function (msg) {
-		    word =  word.toUpperCase();
-		    var def =	"<strong>"+"Meaning of "+word+" :<br>" +  "</strong>" +msg;
-				$('#load').css("display","none");
-				$('#revert').css("display","block");
-			  $('#hiddenDef').html(msg);
-	  	  $('#hiddenWord').html(word);
-		    $("#revert").html(def).addClass('animated bounceIn');
-		});
+		ajaxcall(word);
 			
 	};
 	// checkNetConnection();
@@ -155,23 +157,7 @@ window.addEventListener("load", function()
 				
 
 				//Making post request to PHP file to reach the site http://yourdictionary.com
-				$.ajax({
-		        type: "POST",
-		        url: "http://sarcnitj.com/Server%20Side/index.php", //http://lexicon.byethost18.cp	m/bytehostphp.php
-		        data: {
-		            link: str
-		        }
-		    })
-		    .done(function (msg) {
-	  			str = str.toUpperCase();
-	  			//got meaning of WORD in msg variable
-		  		$('#revert').css("display","block");
-		  		set = "<strong>"+"Meaning of "+str+" :<br>" +  "</strong>" +msg;  
-					$('#hiddenDef').html(msg);
-					$('#hiddenWord').html(str);
-					$('#load').css("display","none");
-					$('#revert').html(set).addClass('animated bounceIn');
-				});
+				ajaxcall(str);
 		}
 
 		else{
@@ -194,22 +180,7 @@ window.addEventListener("load", function()
 					str = str.toLowerCase();
 					  
 					$("#reg-form").submit(function(){  
-						$.ajax({
-		        type: "POST",
-		        url: "http://sarcnitj.com/Server%20Side/index.php", //http://lexicon.byethost18.com/bytehostphp.php	
-		        data: {
-		            link: str
-		        }
-			    })
-			    .done(function (msg){
-							str = str.toUpperCase();
-				  	  var def =	"<strong>"+"Meaning of "+str+" :<br>" +  "</strong>" +msg; 
-				  	  $('#hiddenDef').html(msg);
-				  	  $('#hiddenWord').html(str);
-					    $('#load').css("display","none");
-				  		$('#revert').css("display","block");
-					    $("#revert").html(def).addClass('animated bounceIn');
-					  });
+						ajaxcall(str);
 					  return false;
 				 	});
 					
@@ -292,22 +263,7 @@ window.addEventListener("load", function()
 	    $('#load').css("display","block");
 	    var word = selection[0];
 	    word = word.trim();
-	    $.ajax({
-	        type: "POST",
-	        url: "http://sarcnitj.com/Server%20Side/index.php", //http://lexicon.byethost18.com/bytehostphp.phpp	
-	        data: {
-	            link: word
-	        }
-	    })
-	    .done(function (msg) {
-			    word =  word.toUpperCase();
-			    var def =	"<strong>"+"Meaning of "+word+" :<br>" +  "</strong>" +msg;
-					$('#load').css("display","none");
-					$('#revert').css("display","block");
-				  $('#hiddenDef').html(msg);
-		  	  $('#hiddenWord').html(word);
-		  	  $("#revert").html(def).addClass('animated bounceIn');
-			});
+	    ajaxcall(word);
 	  }
 	});
 
