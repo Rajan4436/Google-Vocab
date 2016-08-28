@@ -100,22 +100,7 @@ window.addEventListener("load", function() {
   function searchVocab(word) {
     $('#revert').css("display", "none");
     $('#load').css("display", "block");
-    if (word.includes('.')) {
-      word = word.substr(0, word.indexOf('.'));
-    }
-    if (word.includes(',')) {
-      word = word.substr(0, word.indexOf(','));
-    }
-    if (word.includes(';')) {
-      word = word.substr(0, word.indexOf(';'));
-    }
-    if (word.includes('--')) {
-      word = word.substr(word.indexOf('--'));
-    }
-    word =  word.replace(/\r?\n|\r/,"");
-    // alert(word+'a');
     ajaxcall(word);
-
   };
   // checkNetConnection();
   chrome.tabs.query({
@@ -309,7 +294,13 @@ window.addEventListener("load", function() {
     s.modify('extend','forward','word');
     var a = s.toString();
     s.modify('move','forward','character');
-    searchVocab(b+a);
+    var word =  b+a;
+    if(/[0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(word) == true){
+      word =  word.replace(/[0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/,"");
+    }
+    alert(word);
+    word =  word.replace(/\r?\n|\r/,"");
+    searchVocab(word);
   });
 
   // chrome.contextMenus.removeAll(function() {
