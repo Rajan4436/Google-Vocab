@@ -33,7 +33,7 @@ if ($ul_length >= 0) {
 $data     = $xpath->query("//ol/li");
 //if($data->parentNode==null)
 $elements = $data->length;
-if ($elements >= 0) {
+if ($elements > 0) {
     $data_array = array();
     $content    = "";
     for ($i = 0; $i < $elements; $i++) {
