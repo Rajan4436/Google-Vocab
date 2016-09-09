@@ -1,18 +1,6 @@
 // "use strict";
 window.addEventListener("load", function() {
 
-  // Checking Internet Connection
-  // function checkNetConnection(){
-  // 	jQuery.ajaxSetup({async:false});
-  // 	re="";
-  // 	r=Math.round(Math.random() * 10000);
-  // 	$.get("https://www.google.co.in/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=testing",{subins:r},function(d){
-  // 	  re=true;
-  // 	}).error(function(){
-  // 	  re=false;
-  // 	});
-  // 	return re;
-  // }
   function ajaxcall(word) {
     $.ajax({
         type: "POST",
@@ -33,39 +21,23 @@ window.addEventListener("load", function() {
       });
   }
   //Jquery ADD Click handler to add WORD-MEANING set in storage
-  function save(str, msg) {
-    chrome.storage.sync.get({
-      userKeyIds: null
-    }, function(result) {
-      // the input argument is ALWAYS an object containing the queried keys
-      // so we select the key we need
-
-      // ### CODE FOR INDEXES
-
-      // if( !localStorage.getItem("count")){
-      //		localStorage.setItem("count","0");
-      // } 
-      // var i = localStorage.getItem("count");
-      // var ticker = parseInt(i);
-      // ticker++;
-      // ####
-
-      var userKeyIds = result.userKeyIds;
-      var arr = $.makeArray(userKeyIds);
-      arr.push(str + " :-  " + msg);
-
-      chrome.storage.sync.set({
-        userKeyIds: arr
-      }, function() {
-        // you can use strings instead of objects
-        // if you don't  want to define default values
-        // chrome.storage.sync.get('userKeyIds', function () {
-        $('#alert').html("Word saved successfully");
-        //	});
-      });
-      // localStorage.setItem("count",ticker.toString());
-    });
-  } //add
+  function save(key, value) {
+    chrome.storage.sync.getBytesInUse(null, function(current_value){
+      var max_value = chrome.storage.sync.QUOTA_BYTES;
+      if(current_value > max_value){
+        $('#alert').html("Storage Exceeds! Please delete some items. ");
+        return;
+      }
+      else{
+        var obj = {};
+          obj[key] =  value;
+          value = value.toString();
+          chrome.storage.sync.set(obj, function(){
+            $('#alert').html("Word saved successfully");
+        });
+      }
+    });  
+  } 
 
 
   function site(str) {
@@ -92,17 +64,12 @@ window.addEventListener("load", function() {
     // localStorage.setItem("count","0");		
   });
 
-  // Helper method to parse the title tag from the response.
-  function getTitle(text) {
-    return text.match('<title>(.*)?</title>')[1];
-  }
-
   function searchVocab(word) {
     $('#revert').css("display", "none");
     $('#load').css("display", "block");
     ajaxcall(word);
   };
-  // checkNetConnection();
+
   chrome.tabs.query({
     'active': true,
     currentWindow: true
@@ -124,59 +91,80 @@ window.addEventListener("load", function() {
         showAgainSelector: '#show-message'
       });
       //Splitting link on the position of '?', '&' or '#'
-      var results = (link.includes('#') ? link.substr(1).split('#') : link.substr(1).split('?'));
-      if (link.includes('&q=')) {
-        var results = link.split('&');
+      
+      if(window.getSelection() == null || window.getSelection() == "")
+      {
+      	var results = (link.includes('#') ? link.substr(1).split('#') : link.substr(1).split('?'));
+	      if (link.includes('&q=')) {
+	        var results = link.split('&');
+	      }
+	      if (link.includes('#q=' && '&q=')) {
+	        var results = link.split('#');
+	      }
+
+	      //Decoding function for extracting the WORD
+	      var qs = (function(a) {
+
+	        if (a == "") return {};
+	        var b = {};
+	        for (var i = 0; i < a.length; ++i) {
+	          var p = a[i].split('=', 2);
+	          if (p.length == 1)
+	            b[p[0]] = "";
+	          else
+	            b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
+	        }
+	        return b;
+
+	      })(results);
+
+	      //Further filter of extracted word If it contain '&' or '+' or " "
+	      if (qs["q"].includes('&')) {
+	        qs["q"] = qs["q"].substr(0, qs["q"].indexOf('&'));
+	      }
+	      if (qs["q"].includes(' ')) {
+	        qs["q"] = qs["q"].substr(0, qs["q"].indexOf(' '));
+	      }
+	      if (qs["q"].includes('+')) {
+	        qs["q"] = qs["q"].substr(0, qs["q"].indexOf('+'));
+	      }
+
+	      //Final WORD stored in variable str
+	      var str = qs["q"];
+	      str = str.toLowerCase();
+
+
+	      //Making post request to PHP file to reach the site http://yourdictionary.com
+	      ajaxcall(str);
       }
-      if (link.includes('#q=' && '&q=')) {
-        var results = link.split('#');
-      }
 
-      //Decoding function for extracting the WORD
-      var qs = (function(a) {
-
-        if (a == "") return {};
-        var b = {};
-        for (var i = 0; i < a.length; ++i) {
-          var p = a[i].split('=', 2);
-          if (p.length == 1)
-            b[p[0]] = "";
-          else
-            b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
-        }
-        return b;
-
-      })(results);
-
-      //Further filter of extracted word If it contain '&' or '+' or " "
-      if (qs["q"].includes('&')) {
-        qs["q"] = qs["q"].substr(0, qs["q"].indexOf('&'));
-      }
-      if (qs["q"].includes(' ')) {
-        qs["q"] = qs["q"].substr(0, qs["q"].indexOf(' '));
-      }
-      if (qs["q"].includes('+')) {
-        qs["q"] = qs["q"].substr(0, qs["q"].indexOf('+'));
-      }
-
-      //Final WORD stored in variable str
-      var str = qs["q"];
-      str = str.toLowerCase();
-
-
-      //Making post request to PHP file to reach the site http://yourdictionary.com
-      ajaxcall(str);
-    } else {
+      if(window.getSelection() != null || window.getSelection() != "")
+      {
+		  	//To get selected value from the webpage
+			  chrome.tabs.executeScript({
+			    code: "window.getSelection().toString();"
+			  }, function(selection) {
+			    if (selection[0] != '') {
+			      $('#revert').css("display", "none");
+			      $('#load').css("display", "block");
+			      var word = selection[0];
+			      word = word.trim();
+			      ajaxcall(word);
+			    }
+			  });    
+		  }
+    } 
+    else {
 
       $('#nongoogle-welcome-message').firstVisitPopup({
         cookieName: 'nongoogle',
         showAgainSelector: '#show-message'
       });
-      document.getElementById('revert').innerHTML = "It is not a Google Search Page, Automatic search will not work but you can see the list by clicking 'Show all' button, or can try manual search";
+      $('#revert').html("It is not a Google Search Page, Automatic search will not work but you can see the list by clicking 'Show all' button, or can try manual search");
       $('#p').css("display", "none");
       $("form").css("display", "block");
 
-      $('#btn').click(function() {
+      $('#reg-form').submit(function() {
         $('#revert').css("display", "none");
         var str = $('#link').val();
         str = str.replace(/\s+/g, '');
@@ -188,12 +176,25 @@ window.addEventListener("load", function() {
         $('#alert').html(null);
         str = str.toLowerCase();
 
-        $("#reg-form").submit(function() {
+        // $("#reg-form").submit(function() {
           ajaxcall(str);
           return false;
-        });
+        // });
 
       });
+
+       //To get selected value from the webpage
+		  chrome.tabs.executeScript({
+		    code: "window.getSelection().toString();"
+		  }, function(selection) {
+		    if (selection[0] != '') {
+		      $('#revert').css("display", "none");
+		      $('#load').css("display", "block");
+		      var word = selection[0];
+		      word = word.trim();
+		      ajaxcall(word);
+		    }
+		  });
     }
 
     $('#add').click(function() {
@@ -208,19 +209,18 @@ window.addEventListener("load", function() {
     });
 
     $('#show').click(function() {
-      chrome.storage.sync.get('userKeyIds', function(result) {
-        if (!result.userKeyIds || result.userKeyIds == "") {
-          document.getElementById('alert').innerHTML = "No Item in the list";
+     chrome.storage.sync.get(null, function(result) {
+        if (result == null || result == "" || !result ) {
+          $('#alert').html("No Item in the list");
           $('#mylist').toggle("linear");
         } else {
-          $('#alert').html(null);
           $('#mylist').html(null);
-          var set = result.userKeyIds;
-          // console.log($(set));
-          // set = set.toString();
-          // set = set.replace(/,/g, "#");
-          // document.getElementById('meaning').innerHTML =  set;
-          //var set = set.split(",");
+          
+          var set = [];
+          var x;
+          for(x in result){
+            set.push(x + " :-  " + result[x]);
+          }
           var cList = $('#mylist');
           $('#mylist').css("padding", "15px");
 
@@ -239,40 +239,22 @@ window.addEventListener("load", function() {
           $('#mylist').toggle("linear");
 
           $('#del').click(function() {
-            $('#mylist li').has('input:checked').remove();
-            var data = [];
-
-            $('#mylist').each(function() {
-              $(this).find('li').each(function() {
-                // cache jquery var
-                var current = $(this);
-                // check if our current li has children (sub elements)
-                // if it does, skip it
-                data.push(current.text());
-              });
-            });
-
-            chrome.storage.sync.set({
-              userKeyIds: data
-            }, function() {});
+            var key;
+            var arr= [];
+            var c = $('#mylist li').has('input:checked').remove();
+            for (var i = 0; i < c.length; i++) {
+              var d = c[i].innerText;
+              key  = d.substr(0,d.indexOf(" :"));
+              arr.push(key);
+            }
+            console.log(arr);
+            chrome.storage.sync.remove(arr);            
           });
+
         } //else
       }); //get
     }); //show
   }); //Tabs Query
-
-  //To get selected value from the webpage
-  chrome.tabs.executeScript({
-    code: "window.getSelection().toString();"
-  }, function(selection) {
-    if (selection[0] != '') {
-      $('#revert').css("display", "none");
-      $('#load').css("display", "block");
-      var word = selection[0];
-      word = word.trim();
-      ajaxcall(word);
-    }
-  });
 
   //About
   $('#about').click(function() {
@@ -287,6 +269,7 @@ window.addEventListener("load", function() {
   });
 
   $("#revert").click(function(e) {
+    $('#alert').html(null);
     s = window.getSelection();
     s.modify('extend','backward','word');        
     var b = s.toString();
@@ -295,11 +278,12 @@ window.addEventListener("load", function() {
     var a = s.toString();
     s.modify('move','forward','character');
     var word =  b+a;
-    if(/[0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(word) == true){
-      word =  word.replace(/[0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/,"");
+    // if(/[0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(word) == true){
+    if(/[^A-z]/.test(word) == true){
+      word =  word.replace(/[^A-z]/,'');
     }
-    alert(word);
     word =  word.replace(/\r?\n|\r/,"");
+    // alert(word);
     searchVocab(word);
   });
 
