@@ -1,70 +1,302 @@
 <!doctype html>
 <html>
+  <head>
+    <title>Lexicon</title>
+    <style>
+      body {
+        min-width: 400px;
+        overflow-x: hidden;
+      }
 
-<head>
-  <title>Data Scraped with PHP</title>
-  <style>
-    body {
-      min-width: 400px;
-      overflow-x: hidden;
-    }
-    
-    img {
-      margin: 5px;
-      border: 2px solid black;
-      vertical-align: middle;
-      width: 75px;
-      height: 75px;
-    }
-    
-    #revert {
-      padding: 10px;
-      background-color: #009ECE;
-      color: white;
-      margin-top: 10px;
-    }
-    
-    #meaning1 {
-      background-color: #009ECE;
-    }
-    
-    #meaning2 {
-      background-color: #FF9E00;
-    }
-    
-    button {
-      background-color: #4CAF50;
-      /* Green */
-      border: none;
-      color: white;
-      padding: 5px 12px;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      font-size: 12px;
-      cursor: pointer;
-      margin: 9px;
-    }
-    
-    .btn {
-      width: 100%;
-    }
-  </style>
-  
-</head>
+      h1{
+      	text-align: center;
+      	margin-top: 0;
+      }
 
-<body>
-  <!-- <div id="meaning1"></div> -->
-  <div id="meaning"></div>
-  <div id="revert">Loading...</div>
-  <div class="btn">
-    <button id="add">Add</button>
-    <button id="clear">Clear</button>
-    <button id="show">Show All</button>
-    <button id="site">Go to the Site</button>
-  </div>
-  <script src="jquery-1.8.0.min.js"></script>
-  <script src="popup.js"></script>
-</body>
+      img {
+        margin: 5px;
+        /*border: 2px solid black;*/
+        vertical-align: middle;
+      	height: 20px;
+				cursor: pointer;
+      }
 
+      #revert{
+      	padding: 10px;
+      	background-color: #009ECE;
+				cursor: default;
+      	color: white;
+      	margin: 10px 0;
+      	text-align: justify;
+      	border-radius: 5px;
+      	/*box-shadow: 0 0 10px #888888;*/
+      }
+
+      #meaning1{
+      	background-color: #009ECE;
+      }
+
+      #meaning2{
+      	background-color: #FF9E00;
+      }
+     
+     	button {
+			    background-color: #4CAF50; /* Green */
+			    border: none;
+			    color: white;
+			    padding: 5px 30px;
+			   	text-align: center;
+			    text-decoration: none;
+			    display: inline-block;
+			    font-size: 12px;
+			    cursor: pointer;
+			    margin: 5px 4px;
+			    border-radius: 4px;
+			}
+
+			.btn{
+				width: 100%;
+				text-align: center;
+			}
+
+			.helplist{
+				padding:15px;
+			}
+
+			p{
+				padding: 5px;
+				text-align: justify;
+			}
+
+			form{
+				display: none;
+			}
+
+			input[type=text], select {
+			    width: 100%;
+			    padding: 12px 20px;
+			    margin: 8px 0;
+			    display: inline-block;
+			    border: 1px solid #ccc;
+			    border-radius: 4px;
+			    box-sizing: border-box;
+			}
+
+			input[type=submit] {
+			    width: 100%;
+			    background-color: #4CAF50;
+			    color: white;
+			    padding: 14px 20px;
+			    margin: 8px 0;
+			    border: none;
+			    border-radius: 4px;
+			    cursor: pointer;
+			}
+
+			input[type=submit]:hover , button:hover{
+			    background-color: #45a049;
+			}
+
+			#alert{
+				color: red;
+				text-align: center;
+    		margin: 10px;
+			}
+
+			#fvpp-blackout {
+			  display: none;
+			  z-index: 499;
+			  position: fixed;
+			  width: 100%;
+			  height: 100%;
+			  top: 0;
+			  left: 0;
+			  background: #000;
+			  opacity: 0.5;
+			}
+
+			#google-welcome-message, #nongoogle-welcome-message {
+			  display: none;
+			  z-index: 500;
+			  position: relative;
+			  border-radius: 5px;
+			  width: 50%;
+			  left: 20%;
+			  top: 20%;
+			  padding: 20px 20px;
+			  background: #FFF;
+			}
+
+			#fvpp-close {
+			  position: absolute;
+			  top: 10px;
+			  right: 20px;
+			  transition: all 200ms;
+			  cursor: pointer;
+			}
+
+			#fvpp-dialog h2 {
+			  font-size: 2em;
+			  margin: 0;
+			}
+
+			#fvpp-dialog p { margin: 0; }
+		
+			#load{
+				font-size: 40px;
+				text-align: center;
+				color: #dbdada;
+				display: none;
+			}
+
+			.hide{
+				display: none;
+			}
+
+			#helpslide, #aboutslide{
+				position: absolute;
+				z-index: 999;
+				background: white;
+				overflow: auto;	
+				top: 100px;
+				bottom: 0;
+			}
+
+			.head{
+				width: 100%;
+				text-align: center;
+			}
+
+			.head img{
+				width: 50%;
+				height: auto;
+			}
+
+			.main{
+				position: relative;
+			}
+
+			header{
+				width: 100%;
+			}
+
+			header .socio{
+				float: right;
+			}
+
+			.helplist li, #mylist li{
+				padding: 5px;
+				text-align: justify;
+			}
+
+			#mylist{
+				display: none;
+			}
+
+			h4{
+				padding: 0 5px;
+			}
+
+    </style>
+
+  </head>
+  <link rel="stylesheet" type="text/css" href="animate.css">
+  <body >
+  	<div class="head"><img src="lexicon.png"></div>
+  		<img src="about.png" id="about" alt="About" title="About">
+  		<img src="help.png" id="help" alt="Help" title="Help">
+  		<!-- <img src="fb.png" id="fb" class="socio">
+  		<img src="mail.png" id="mail" class="socio"> -->
+  	<div id="helpslide" class="hide">
+  		<h1>Help</h1>
+  		<table>
+  			<tr>
+  				<th>When you are on google search page</th>
+  			</tr>
+  			<tr>	
+  				<td>
+  					<ol class="helplist">
+  						<li>The application require working internet connetion.</li>
+  						<li>There are 4 different ways of searching in Lexicon-</li>
+  							<ul>
+		  						<li>Try to find meaning of any word on google, it will automatically reflect in the Lexicon on opening.</li>
+  								<li>You can also search by simply clicking on a word inside blue box. </li>
+  								<li>Another way of searching is manual searching which you can do on non-google pages.</li>
+  								<li>There is another option for search by selecting the word on webpage and then opening the Lexicon. It automatically detect the meaning and present it in front of you.</li>
+  							</ul>
+  						<li>Lexicon will able to take only first word from Google's search input, so avoid writing in sentences. E.g. "Define ersatz" will not work</li>
+  						<li>The searched word can be saved for future references, you can save as many words as you want.</li>
+  						<li>The list of saved words can be seen by clicking "Show All" button even when you are offline.</li>
+  						<li>You can delete saved words permanently either by multiple selection using checkboxes or at once by "Delete All" button.</li>
+  						<li>For further details and usage of the particular word, you can visit the website directly by clicking "See on Wiktionary".</li>
+  					</ol>
+  				</td>
+  			</tr>
+  			<tr>
+  				<th>While on non-Google search page</th>
+  			</tr>
+  			<tr>	
+  				<td>
+  					<ol class ="helplist">
+  						<li>All above steps will work plus you can search for a word manually by typing it into the form.</li>
+  						<li>There is no auto correction, so spelling mistakes should be avoided by user itself.</li>
+  					</ol>
+  				</td>
+  			</tr>
+  		</table>
+  	</div>
+  	<div id="aboutslide" class="hide">
+  		<h1>Licence</h1>
+  		<p>Copyright (c) 2016 Lexicon Chrome Extension</p>
+			<P>
+			THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+			IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+			FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+			AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+			LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+			OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+			SOFTWARE.</P>
+			<p>
+			THE SOFTWARE IS TOTALLY FREE OF COST AND WILL BE ALWAYS
+			</p>
+
+			<h4>Please provide your valuable feedbacks and suggestions in comments to make this more better.</h4>
+  	</div>
+  	<div class="main">
+	  	<div id="load">Loading...</div>
+	  	<div id="revert" class="box"></div>
+	  	<div id="alert" class="box"></div>
+	  	<div id="hiddenWord" class="hide"></div>
+	  	<div id="hiddenDef" class="hide"></div>
+	  	<ol id="mylist">
+	  		
+	  	</ol>
+	  	<div id="google-welcome-message">
+			  <h2>This is your first visit</h2>
+			  <p>You will see this page when you search the meaning of a single word on google</p>
+			</div>
+
+		 	<div id="nongoogle-welcome-message">
+			  <h2>This is your first visit</h2>
+			  <p>You will see this page when you are not using google</p>
+			</div>
+
+		  <div class="btn">
+		  	<button id="add">Save this Word</button>
+			  <button id="clear">Delete All</button>
+		  	<button id="show">Show All</button>
+		 		<button id="site">See on Wiktionary</button>
+		 		<button id="del">Delete Selected Words</button>
+		  </div>
+		  <form id="reg-form">
+			  <input type="text" name="link" id="link" placeholder="Enter the word" required>
+			  <input type="submit" name="btn" id="btn" value="Try Manual Search">
+		  </form>
+		  <div id="result"></div>
+		</div>
+	  <script src="jquery-1.8.0.min.js"></script>
+    <script src="popup.js"></script>
+    <script src="jquery.firstVisitPopup.js"></script>
+  </body>
 </html>
+
