@@ -1,17 +1,30 @@
 {
   "manifest_version": 2,
 
-  "name": "Google Vocab",
-  "description": "This will save the search result of vocabulary words with meaning.",
+  "name": "word-o-save",
+  "description": "This app lets you save meaning of all the words that you search frequently on google while reading an article for further reference",
   "version": "1.0",
 
   "permissions": [
     "http://sarcnitj.com/Server%20Side/",
+    "storage",
+    "notifications",
+    "contextMenus",
     "tabs",
-    "storage"
+    "http://*/",
+    "https://*/"
   ],
+
+  "icons": { "16": "icon16.png",
+           "48": "icon48.png",
+          "128": "icon128.png" },
+
   "browser_action": {
-    "default_icon": "icon.png",
+    "default_icon": {                   
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"        
+    },
     "default_popup": "popup.html"
   }
 }
