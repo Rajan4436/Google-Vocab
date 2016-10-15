@@ -5,12 +5,18 @@
     <style>
       body {
         min-width: 400px;
+        min-height: 400px;
         overflow-x: hidden;
       }
 
       h1{
       	text-align: center;
       	margin-top: 0;
+      }
+
+      a{
+      	text-decoration: none;
+      	color: black;
       }
 
       img {
@@ -103,7 +109,7 @@
     		margin: 10px;
 			}
 
-			#fvpp-blackout {
+			#fvpp-blackout, .reminder {
 			  display: none;
 			  z-index: 499;
 			  position: fixed;
@@ -113,6 +119,36 @@
 			  left: 0;
 			  background: #000;
 			  opacity: 0.5;
+			}
+
+			.enclose h1{
+				position: absolute;
+		    right: 0;
+		    font-size: 18px;
+		    border-radius: 50%;
+		    border: 1px solid black;
+		    color: black;
+		    top: 0;
+		    cursor: pointer;
+		    line-height: 10px;
+		    padding: 10px;
+			}
+
+			.reminder .enclose{
+				color: black;
+		    text-align: center;
+		    width: 100%;
+		    position: relative;
+		    margin-top: 40%;
+		    padding: 20px 0;
+		    display: inline-block;
+		    background: white;
+		    transform: translateY(-50%);
+			}
+
+
+			.alreadyrated:hover, .ratepage:hover{
+				transform: scale(1.1);
 			}
 
 			#google-welcome-message, #nongoogle-welcome-message {
@@ -198,7 +234,7 @@
 			}
 
     </style>
-
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
   </head>
   <link rel="stylesheet" type="text/css" href="animate.css">
   <body >
@@ -261,6 +297,8 @@
 			</p>
 
 			<h4>Please provide your valuable feedbacks and suggestions in comments to make this more better.</h4>
+			<img class="ratepage" src="rate.png"/>
+			<a href="#" class="ratepage">Take me to the rating page.</a>
   	</div>
   	<div class="main">
 	  	<div id="load">Loading...</div>
@@ -279,6 +317,16 @@
 		 	<div id="nongoogle-welcome-message">
 			  <h2>This is your first visit</h2>
 			  <p>You will see this page when you are not using google</p>
+			</div>
+
+			<div class="reminder" style="background: rgba(0,0,0,0.5); opacity : 1;">
+				<div class="enclose">
+					<H1>X</H1>
+					<h2>Please rate this app out of 5 and give your suggestions.</h2>
+					<img class="ratepage" src="rate.png"/>
+					<a href="#" class="ratepage">Take me to the rating page.<i class="fa fa-external-link" aria-hidden="true"></i></a>
+					<a href="#" class="alreadyrated" style="display: block;">Already Rated? - Yes</a>
+				</div>
 			</div>
 
 		  <div class="btn">
