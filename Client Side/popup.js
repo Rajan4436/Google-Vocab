@@ -1,6 +1,48 @@
 // "use strict";
 window.addEventListener("load", function() {
 
+  //Reminder
+  var i = 0;
+  if(localStorage.getItem("alreadydone") == "1")
+  {
+    // localStorage.removeItem("alreadydone");
+  }
+  else
+  {
+    localStorage.setItem("alreadydone","0");
+    if(localStorage.getItem("count") == "3"){
+      $(".reminder").show();
+      localStorage.setItem("count",i);    
+    }
+    else{
+      i = localStorage.getItem("count")?localStorage.getItem("count"):0;
+      i = parseInt(i);
+      i=i+1;
+      console.log(i);    
+      localStorage.setItem("count",i);    
+    }
+
+    $(".ratepage").click(function(e){
+      e.preventDefault();
+      chrome.tabs.create({
+          'url': "https://chrome.google.com/webstore/detail/word-o-save/amjldpjobjpiflbdejcidlkmhllhnnnm/reviews"
+        }, function(tab) {
+          // Tab opened.
+        });
+
+    });
+
+    $(".enclose h1, .reminder").click(function(n){
+      n.stopPropagation();
+      $(".reminder").hide();
+    });
+  }    
+ 
+  $(".alreadyrated").click(function(e){
+    e.preventDefault();
+    localStorage.setItem("alreadydone","1");
+  });
+
   function ajaxcall(word) {
     $.ajax({
         type: "POST",
@@ -214,6 +256,7 @@ window.addEventListener("load", function() {
           $('#alert').html("No Item in the list");
           $('#mylist').toggle("linear");
         } else {
+          $('#alert').html(null);
           $('#mylist').html(null);
           
           var set = [];
@@ -296,5 +339,3 @@ window.addEventListener("load", function() {
   // });
 
 }, false);
-
-
