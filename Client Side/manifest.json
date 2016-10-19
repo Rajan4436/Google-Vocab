@@ -3,7 +3,7 @@
 
   "name": "word-o-save",
   "description": "This app lets you save meaning of all the words that you search frequently on google while reading an article for further reference",
-  "version": "1.0",
+  "version": "1.3",
 
   "permissions": [
     "http://sarcnitj.com/Server%20Side/",
