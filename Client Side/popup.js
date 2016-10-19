@@ -1,6 +1,13 @@
 // "use strict";
 window.addEventListener("load", function() {
 
+  //UpdateCheck
+  chrome.runtime.onUpdateAvailable.addListener(function(){
+    var c = chrome.app.getDetails();
+    console.log(c.version);
+    chrome.runtime.reload();
+  });
+
   //Reminder
   var i = 0;
   if(localStorage.getItem("alreadydone") == "1")
@@ -10,7 +17,7 @@ window.addEventListener("load", function() {
   else
   {
     localStorage.setItem("alreadydone","0");
-    if(localStorage.getItem("count") == "3"){
+    if(localStorage.getItem("count") == "15"){
       $(".reminder").show();
       localStorage.setItem("count",i);    
     }
@@ -59,7 +66,12 @@ window.addEventListener("load", function() {
         $('#revert').css("display", "block");
         $('#hiddenDef').html(msg);
         $('#hiddenWord').html(word);
+
+        //Display result in Blue box
         $("#revert").html(def).addClass('animated bounceIn');
+        var height = $("#revert").innerHeight();
+        var bodyHeight = $("body").innerHeight();
+        $("body").css("height",bodyHeight + height - 40);
       });
   }
   //Jquery ADD Click handler to add WORD-MEANING set in storage
@@ -71,12 +83,22 @@ window.addEventListener("load", function() {
         return;
       }
       else{
-        var obj = {};
+          var obj = {};
+          var y;
           obj[key] =  value;
           value = value.toString();
-          chrome.storage.sync.set(obj, function(){
-            $('#alert').html("Word saved successfully");
-        });
+          chrome.storage.sync.get(null, function(all) {
+            for(y in all){
+              if(key == y)
+              { 
+                alert(key + " is already in the list.");
+                return;
+              }
+            }
+            chrome.storage.sync.set(obj, function(){
+                $('#alert').html("Word saved successfully");
+            });
+          });
       }
     });  
   } 
@@ -120,6 +142,9 @@ window.addEventListener("load", function() {
     var link = tabs[0].url;
     if (link.includes('www.google')) {
 
+      var bodyHeight = $("body").innerHeight();
+      $("body").css("height",bodyHeight + 128);
+      // $('body').css("min-height","300px");
       $('#revert').css("display", "none");
       $('#load').css("display", "block");
 
@@ -197,7 +222,9 @@ window.addEventListener("load", function() {
 		  }
     } 
     else {
-
+      
+      var bodyHeight = $("body").innerHeight();
+      $("body").css("height",bodyHeight + 250);
       $('#nongoogle-welcome-message').firstVisitPopup({
         cookieName: 'nongoogle',
         showAgainSelector: '#show-message'
@@ -258,14 +285,14 @@ window.addEventListener("load", function() {
         } else {
           $('#alert').html(null);
           $('#mylist').html(null);
-          
+          // console.log($(result));
           var set = [];
           var x;
           for(x in result){
             set.push(x + " :-  " + result[x]);
           }
           var cList = $('#mylist');
-          $('#mylist').css("padding", "15px");
+          $('#mylist').css({"padding":"15px", "padding-bottom":"200px"});
 
           $.each(set, function(i) {
             var li = $('<li/>')
@@ -339,3 +366,5 @@ window.addEventListener("load", function() {
   // });
 
 }, false);
+
+
