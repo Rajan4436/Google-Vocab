@@ -5,7 +5,7 @@
     <style>
       body {
         min-width: 400px;
-        min-height: 400px;
+        /*min-height: 400px;*/
         overflow-x: hidden;
       }
 
@@ -233,6 +233,30 @@
 				padding: 0 5px;
 			}
 
+			#reg-form{
+				padding:0 10px; 
+			}
+
+			.btn{
+		    position: fixed;
+		    bottom: 0;
+		    left: 0px;
+		    background: white;
+		    text-align: center;
+		    padding: 10px 0;
+			}
+
+			::-webkit-scrollbar {
+			    background: #dddddd;
+			    width: 10px;
+			}
+			::-webkit-scrollbar-thumb {
+			    background-color: #009ECE;
+			    border: none;
+			}
+			::-webkit-scrollbar-thumb:hover {
+			    background-color: rgba(0, 0, 0, 0.3);
+			}
     </style>
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
   </head>
@@ -297,7 +321,7 @@
 			</p>
 
 			<h4>Please provide your valuable feedbacks and suggestions in comments to make this more better.</h4>
-			<img class="ratepage" src="rate.png"/>
+			<img class="ratepage" src="rate.jpg"/>
 			<a href="#" class="ratepage">Take me to the rating page.</a>
   	</div>
   	<div class="main">
@@ -322,8 +346,8 @@
 			<div class="reminder" style="background: rgba(0,0,0,0.5); opacity : 1;">
 				<div class="enclose">
 					<H1>X</H1>
-					<h2>Please rate this app out of 5 and give your suggestions.</h2>
-					<img class="ratepage" src="rate.png"/>
+					<h2>Please rate this app out of 5 and give your valuable suggestions.</h2>
+					<img class="ratepage" src="rate.jpg"/>
 					<a href="#" class="ratepage">Take me to the rating page.<i class="fa fa-external-link" aria-hidden="true"></i></a>
 					<a href="#" class="alreadyrated" style="display: block;">Already Rated? - Yes</a>
 				</div>
@@ -335,11 +359,12 @@
 		  	<button id="show">Show All</button>
 		 		<button id="site">See on Wiktionary</button>
 		 		<button id="del">Delete Selected Words</button>
-		  </div>
-		  <form id="reg-form">
+		 		<form id="reg-form">
 			  <input type="text" name="link" id="link" placeholder="Enter the word" required>
-			  <input type="submit" name="btn" id="btn" value="Try Manual Search">
-		  </form>
+				  <input type="submit" name="btn" id="btn" value="Try Manual Search">
+			  </form>
+		  </div>
+		 
 		  <div id="result"></div>
 		</div>
 	  <script src="jquery-1.8.0.min.js"></script>
